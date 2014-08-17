@@ -52,7 +52,7 @@ public class Character : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2f, Screen.height/2f, 0));
-            RaycastHit[] hits = Physics.RaycastAll(ray, 100, 1 << LayerMask.NameToLayer("Vehicles"));
+            RaycastHit[] hits = Physics.RaycastAll(ray, 1000, 1 << LayerMask.NameToLayer("Vehicles"));
             System.Array.Sort(hits, rayHitComparer);
             if (hits.Length > 0)
             {
