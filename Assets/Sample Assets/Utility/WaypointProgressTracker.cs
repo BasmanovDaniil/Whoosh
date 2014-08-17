@@ -8,7 +8,7 @@ public class WaypointProgressTracker : MonoBehaviour {
 	// This script manages the amount to look ahead along the route,
 	// and keeps track of progress and laps.
 	
-	[SerializeField] WaypointCircuit circuit;         // A reference to the waypoint-based route we should follow
+	[SerializeField] public WaypointCircuit circuit;         // A reference to the waypoint-based route we should follow
 	
 	[SerializeField] float lookAheadForTargetOffset = 5;		// The offset ahead along the route that the we will aim for
 	[SerializeField] float lookAheadForTargetFactor = .1f;      // A multiplier adding distance ahead along the route to aim for, based on current speed
