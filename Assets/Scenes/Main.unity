@@ -588,8 +588,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   circuit: {fileID: 838770462}
   spawnPositions:
-  - {x: -6, y: 0, z: -33}
-  - {x: 2, y: 0, z: -33}
+  - {x: -15, y: 0, z: -33}
+  - {x: -7, y: 0, z: -33}
+  - {x: 0, y: 0, z: -33}
+  - {x: 7, y: 0, z: -33}
+  - {x: 15, y: 0, z: -33}
 --- !u!4 &663381886
 Transform:
   m_ObjectHideFlags: 0

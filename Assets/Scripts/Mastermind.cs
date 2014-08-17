@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ProceduralToolkit;
+using UnityEngine;
 
 public class Mastermind : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class Mastermind : MonoBehaviour
         {
             var tracker = (WaypointProgressTracker) Instantiate(carPrefab, spawnPosition, Quaternion.identity);
             tracker.circuit = circuit;
+            var car = tracker.GetComponent<Car>();
+            car.SetColors(RandomE.colorHSV, RandomE.colorHSV);
         }
 
         var characterPrefab = Resources.Load("Character");
