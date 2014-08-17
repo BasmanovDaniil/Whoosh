@@ -17,7 +17,7 @@ public class Car : MonoBehaviour
             r.SetPropertyBlock(block);
         }
     }
-    
+
     public void Attach()
     {
         //Character.instance.transform.parent = roof;
@@ -28,7 +28,7 @@ public class Car : MonoBehaviour
     public void Detach()
     {
         //Character.instance.transform.parent = null;
-        Character.instance.rigidbody.AddForce(rigidbody.velocity + Vector3.up*1000);
+        Character.instance.rigidbody.AddForce(rigidbody.velocity + Vector3.up*700);
         attach = false;
         Character.instance.car = null;
     }
@@ -38,7 +38,8 @@ public class Car : MonoBehaviour
         if (attach)
         {
             Character.instance.rigidbody.AddForce(rigidbody.velocity);
-            Character.instance.rigidbody.MovePosition(Vector3.Slerp(Character.instance.rigidbody.position, roof.position + Vector3.up, 0.7f));
+            var position = Vector3.Lerp(Character.instance.rigidbody.position, roof.position + Vector3.up, 0.35f);
+            Character.instance.rigidbody.MovePosition(position);
         }
     }
 }

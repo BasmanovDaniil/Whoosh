@@ -56,8 +56,16 @@ public class Character : MonoBehaviour
             System.Array.Sort(hits, rayHitComparer);
             if (hits.Length > 0)
             {
-                Detach();
-                hits[0].transform.GetComponentInParent<Car>().Attach();
+                var firstCar = hits[0].transform.GetComponentInParent<Car>();
+                if (car == null)
+                {
+                    firstCar.Attach();
+                }
+                else if (car != firstCar)
+                {
+                    Detach();
+                    firstCar.Attach();
+                }
             }
         }
         if (Input.GetMouseButtonDown(1))
@@ -108,8 +116,8 @@ public class Character : MonoBehaviour
         }
 
         // Set the rigidbody's velocity according to the ground angle and desired move
-        rigidbody.velocity = desiredMove + Vector3.up * yv;
-        
+        rigidbody.velocity = desiredMove + Vector3.up*yv;
+
         // Use low/high friction depending on whether we're moving or not
         if (desiredMove.magnitude > 0 || !grounded)
         {
