@@ -91,4 +91,12 @@ public class Mastermind : MonoBehaviour
             car.Activate();
         }
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            Application.LoadLevel(0);
+        }
+    }
 }
