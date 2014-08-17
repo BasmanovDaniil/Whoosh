@@ -263,7 +263,7 @@ public class WaypointListDrawer : PropertyDrawer
 						{
 							EditorGUI.ObjectField(rect, item.objectReferenceValue, typeof(Transform), true);						
 						} else {
-							if (GUI.Button (rect, props[n]))
+							if (GUI.Button (rect, props[n], EditorStyles.miniButton))
 							{
 								switch (props[n])
 								{
@@ -296,7 +296,8 @@ public class WaypointListDrawer : PropertyDrawer
 
 			// add button
 			var addButtonRect = new Rect ((x + position.width) - widths[widths.Length-1]*inspectorWidth, y, widths[widths.Length-1]*inspectorWidth, lineHeight);
-			if (GUI.Button (addButtonRect, "+")) {
+            if (GUI.Button(addButtonRect, "+", EditorStyles.miniButton))
+            {
 				items.InsertArrayElementAtIndex(items.arraySize);
 			}
 			
@@ -305,7 +306,7 @@ public class WaypointListDrawer : PropertyDrawer
 
 		// add all button
 		var addAllButtonRect = new Rect (x, y, inspectorWidth, lineHeight);
-		if (GUI.Button (addAllButtonRect, "Assign using all child objects"))
+        if (GUI.Button(addAllButtonRect, "Assign using all child objects", EditorStyles.miniButton))
 		{
 			var circuit = property.FindPropertyRelative("circuit").objectReferenceValue as WaypointCircuit;
 			var children = new Transform[ circuit.transform.childCount ];
@@ -323,7 +324,8 @@ public class WaypointListDrawer : PropertyDrawer
 
 		// rename all button
 		var renameButtonRect = new Rect (x, y, inspectorWidth, lineHeight);
-		if (GUI.Button (renameButtonRect, "Auto Rename numerically from this order")) {
+        if (GUI.Button(renameButtonRect, "Auto Rename numerically from this order", EditorStyles.miniButton))
+        {
 			var circuit = property.FindPropertyRelative("circuit").objectReferenceValue as WaypointCircuit;
 			int n=0; foreach (Transform child in circuit.waypointList.items) child.name = "Waypoint "+(n++).ToString("000");
 
