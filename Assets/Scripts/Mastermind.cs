@@ -12,6 +12,11 @@ public class Mastermind : MonoBehaviour
     private float carOffset = 7;
     private TrafficLights trafficLights;
     private List<CheckPoint> checkPoints = new List<CheckPoint>();
+    private GUIText counterText;
+    private GUIText crosshairText;
+    private int characterPoints = 0;
+    private int aiPoints = 0;
+    private bool started = false;
 
     private void Awake()
     {
@@ -30,6 +35,11 @@ public class Mastermind : MonoBehaviour
         var checkPointPrefab = Resources.Load<CheckPoint>("CheckPoint");
         var carPrefab = Resources.Load<WaypointProgressTracker>("Car");
         var characterPrefab = Resources.Load("Character");
+
+        var ui = Instantiate(Resources.Load("UI"));
+        ui.name = "UI";
+        counterText = GameObject.Find("UI/Counter").GetComponent<GUIText>();
+        crosshairText = GameObject.Find("UI/Crosshair").GetComponent<GUIText>();
 
         // Pillars
         var outerPillars = Polygon.Circle(circleRadius + carOffset*carCount + 10, 30);
@@ -51,14 +61,18 @@ public class Mastermind : MonoBehaviour
         var waypoints = new List<Vector3>();
         foreach (var vertex in path)
         {
-            var position = new Vector3(vertex.x, 0, vertex.y);
+        }
+        for (int i = 0; i < path.Count; i++)
+        {
+            var position = new Vector3(path[i].x, 0, path[i].y);
             waypoints.Add(position);
             var checkPoint = (CheckPoint) Instantiate(checkPointPrefab, position, Quaternion.identity);
             checkPoints.Add(checkPoint);
             checkPoint.transform.parent = transform;
             checkPoint.callback = CheckPoint;
+            checkPoint.index = i;
         }
-
+        checkPoints[0].Disable();
         circuit.waypoints = waypoints.ToArray();
         circuit.Initialize();
 
@@ -101,6 +115,7 @@ public class Mastermind : MonoBehaviour
         {
             car.Activate();
         }
+        started = true;
     }
 
     private void Update()
@@ -109,17 +124,55 @@ public class Mastermind : MonoBehaviour
         {
             Application.LoadLevel(0);
         }
+        counterText.text = string.Format("You {0}\nAI {1}", characterPoints, aiPoints);
     }
 
-    private void CheckPoint(Car firstCar)
+    private void CheckPoint(int index, Car firstCar)
     {
-        if (firstCar == Character.instance.car)
+        if (started)
         {
-            Debug.Log("Character");
+            if (firstCar == Character.instance.car)
+            {
+                characterPoints++;
+            }
+            else
+            {
+                aiPoints++;
+            }
+            checkPoints[index].Disable();
+            if (index > checkPoints.Count/2)
+            {
+                checkPoints[0].Reset();
+            }
+            if (index == 0)
+            {
+                Finish();
+            }
         }
         else
         {
-            Debug.Log("AI " + firstCar.name);
+        }
+    }
+
+    private void Finish()
+    {
+        foreach (var car in cars)
+        {
+            car.Deactivate();
+        }
+        started = false;
+
+        if (characterPoints > aiPoints)
+        {
+            crosshairText.text = "Win!";
+        }
+        else if (characterPoints < aiPoints)
+        {
+            crosshairText.text = "Lost!";
+        }
+        else
+        {
+            crosshairText.text = "Draw!";
         }
     }
 }
