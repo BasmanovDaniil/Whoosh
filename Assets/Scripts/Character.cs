@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Character : MonoBehaviour
 {
@@ -44,26 +45,29 @@ public class Character : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
             Screen.lockCursor = lockCursor;
-        }
 
-        if (Input.GetMouseButtonDown(0))
-        {
             Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2f, Screen.height/2f, 0));
-            RaycastHit[] hits = Physics.RaycastAll(ray, 1000, 1 << LayerMask.NameToLayer("Vehicles"));
+            var hits = Physics.SphereCastAll(ray, 3, 1000, 1 << LayerMask.NameToLayer("Vehicles"));
             System.Array.Sort(hits, rayHitComparer);
+
             if (hits.Length > 0)
             {
-                var firstCar = hits[0].transform.GetComponentInParent<Car>();
-                if (car == null)
+                foreach (var hit in hits)
                 {
-                    firstCar.Attach();
-                }
-                else if (car != firstCar)
-                {
-                    Detach();
+                    var firstCar = hit.transform.GetComponentInParent<Car>();
+                    if (car == null)
+                    {
+                        firstCar.Attach();
+                        break;
+                    }
+                    if (car != firstCar)
+                    {
+                        Detach();
+                        break;
+                    }
                 }
             }
             else
