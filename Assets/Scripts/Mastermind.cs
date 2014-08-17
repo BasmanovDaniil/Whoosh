@@ -42,6 +42,7 @@ public class Mastermind : MonoBehaviour
         GenerateCharacter();
         yield return null;
         StartCountdown();
+        audio.Play();
     }
     
     private void LoadPrefabs()
@@ -76,6 +77,10 @@ public class Mastermind : MonoBehaviour
             if (i % 2 == 1)
             {
                 secondPath.Reverse();
+            }
+            if (i!= 0)
+            {
+                path.Insert(path.Count / 2, center + circleOffset / 2);
             }
             path.InsertRange(path.Count / 2, secondPath);
             GenerateCircle(center, circleRadius);
