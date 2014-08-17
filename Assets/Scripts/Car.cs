@@ -7,7 +7,7 @@ public class Car : MonoBehaviour
 
     private bool attach = false;
     private CarController carController;
-    private float defaultMaxSpeed = 80;
+    private float defaultMaxSpeed = 90;
     private float weightedMaxSpeed = 40;
 
     public void Initialize()
@@ -36,7 +36,7 @@ public class Car : MonoBehaviour
 
     public void Detach()
     {
-        Character.instance.rigidbody.AddExplosionForce(12000, rigidbody.position, 100);
+        Character.instance.rigidbody.AddExplosionForce(20000, rigidbody.position, 5);
         attach = false;
         Character.instance.car = null;
         carController.MaxSpeed = defaultMaxSpeed;
@@ -49,10 +49,15 @@ public class Car : MonoBehaviour
             Character.instance.rigidbody.AddForce(rigidbody.velocity);
             var currentPosition = Character.instance.rigidbody.position;
             var targetPosition = roof.position + Vector3.up;
-            
-            if ((targetPosition - currentPosition).sqrMagnitude > 2)
+
+            var sqrDistance = (targetPosition - currentPosition).sqrMagnitude;
+            if (sqrDistance > 16)
             {
-                Character.instance.rigidbody.MovePosition(Vector3.MoveTowards(currentPosition, targetPosition, 1));
+                Character.instance.rigidbody.MovePosition(Vector3.MoveTowards(currentPosition, targetPosition, 1.5f));
+            }
+            else if (sqrDistance > 4)
+            {
+                Character.instance.rigidbody.MovePosition(Vector3.MoveTowards(currentPosition, targetPosition, 1f));
             }
             else
             {
