@@ -58,10 +58,10 @@ public class Mastermind : MonoBehaviour
         // Circuit
         circuit = GetComponent<WaypointCircuit>();
         var path = Polygon.Circle(circleRadius, 30);
+        var secondPath = Polygon.Circle(circleRadius, 30) - Vector2.right*circleRadius*2;
+        secondPath.Reverse();
+        path.InsertRange(path.Count/2, secondPath);
         var waypoints = new List<Vector3>();
-        foreach (var vertex in path)
-        {
-        }
         for (int i = 0; i < path.Count; i++)
         {
             var position = new Vector3(path[i].x, 0, path[i].y);
@@ -149,17 +149,10 @@ public class Mastermind : MonoBehaviour
                 Finish();
             }
         }
-        else
-        {
-        }
     }
 
     private void Finish()
     {
-        foreach (var car in cars)
-        {
-            car.Deactivate();
-        }
         started = false;
 
         if (characterPoints > aiPoints)

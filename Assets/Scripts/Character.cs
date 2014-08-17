@@ -64,13 +64,12 @@ public class Character : MonoBehaviour
                 else if (car != firstCar)
                 {
                     Detach();
-                    firstCar.Attach();
                 }
             }
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            Detach();
+            else
+            {
+                Detach();
+            }
         }
     }
 

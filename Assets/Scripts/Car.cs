@@ -29,7 +29,6 @@ public class Car : MonoBehaviour
 
     public void Attach()
     {
-        //Character.instance.transform.parent = roof;
         attach = true;
         Character.instance.car = this;
         carController.MaxSpeed = weightedMaxSpeed;
@@ -37,8 +36,7 @@ public class Car : MonoBehaviour
 
     public void Detach()
     {
-        //Character.instance.transform.parent = null;
-        Character.instance.rigidbody.AddForce(rigidbody.velocity + Vector3.up*700);
+        Character.instance.rigidbody.AddExplosionForce(12000, rigidbody.position, 100);
         attach = false;
         Character.instance.car = null;
         carController.MaxSpeed = defaultMaxSpeed;
@@ -49,8 +47,17 @@ public class Car : MonoBehaviour
         if (attach)
         {
             Character.instance.rigidbody.AddForce(rigidbody.velocity);
-            var position = Vector3.Lerp(Character.instance.rigidbody.position, roof.position + Vector3.up, 0.35f);
-            Character.instance.rigidbody.MovePosition(position);
+            var currentPosition = Character.instance.rigidbody.position;
+            var targetPosition = roof.position + Vector3.up;
+            
+            if ((targetPosition - currentPosition).sqrMagnitude > 2)
+            {
+                Character.instance.rigidbody.MovePosition(Vector3.MoveTowards(currentPosition, targetPosition, 1));
+            }
+            else
+            {
+                Character.instance.rigidbody.MovePosition(Vector3.Slerp(currentPosition, targetPosition, 0.35f));
+            }
         }
     }
 
