@@ -7,7 +7,8 @@ public class Mastermind : MonoBehaviour
     private int carCount = 5;
     private WaypointCircuit circuit;
     private List<Car> cars = new List<Car>();
-    private float circleRadius = 100;
+    private float circleRadius = 150;
+    private float circleCount = 3;
     private Vector3 startPosition;
     private float carOffset = 7;
     private TrafficLights trafficLights;
@@ -17,6 +18,13 @@ public class Mastermind : MonoBehaviour
     private int characterPoints = 0;
     private int aiPoints = 0;
     private bool started = false;
+    private float rampChance = 0.1f;
+    private GameObject obstacles;
+    private Transform pillarPrefab;
+    private CheckPoint checkPointPrefab;
+    private WaypointProgressTracker carPrefab;
+    private Object characterPrefab;
+    private List<Transform> ramps = new List<Transform>();
 
     private void Awake()
     {
@@ -30,51 +38,42 @@ public class Mastermind : MonoBehaviour
 
     private void GenerateWorld()
     {
-        var obstacles = new GameObject("Obstacles");
-        var pillarPrefab = Resources.Load<Transform>("Pillar");
-        var checkPointPrefab = Resources.Load<CheckPoint>("CheckPoint");
-        var carPrefab = Resources.Load<WaypointProgressTracker>("Car");
-        var characterPrefab = Resources.Load("Character");
+        obstacles = new GameObject("Obstacles");
+        pillarPrefab = Resources.Load<Transform>("Pillar");
+        checkPointPrefab = Resources.Load<CheckPoint>("CheckPoint");
+        carPrefab = Resources.Load<WaypointProgressTracker>("Car");
+        characterPrefab = Resources.Load("Character");
+        ramps.Add(Resources.Load<Transform>("MiniRamp"));
+        ramps.Add(Resources.Load<Transform>("Ramp"));
+        ramps.Add(Resources.Load<Transform>("WideRamp"));
 
         var ui = Instantiate(Resources.Load("UI"));
         ui.name = "UI";
         counterText = GameObject.Find("UI/Counter").GetComponent<GUIText>();
         crosshairText = GameObject.Find("UI/Crosshair").GetComponent<GUIText>();
 
-        // Pillars
-        var outerPillars = Polygon.Circle(circleRadius + carOffset*carCount + 10, 30);
-        foreach (var pillar in outerPillars)
-        {
-            var clone = (Transform) Instantiate(pillarPrefab, new Vector3(pillar.x, 0, pillar.y), Quaternion.identity);
-            clone.parent = obstacles.transform;
-        }
-        var innerPillars = Polygon.Circle(circleRadius - 10, 30);
-        foreach (var pillar in innerPillars)
-        {
-            var clone = (Transform) Instantiate(pillarPrefab, new Vector3(pillar.x, 0, pillar.y), Quaternion.identity);
-            clone.parent = obstacles.transform;
-        }
-
         // Circuit
         circuit = GetComponent<WaypointCircuit>();
-        var path = Polygon.Circle(circleRadius, 30);
-        var secondPath = Polygon.Circle(circleRadius, 30) - Vector2.right*circleRadius*2;
-        secondPath.Reverse();
-        path.InsertRange(path.Count/2, secondPath);
-        var waypoints = new List<Vector3>();
-        for (int i = 0; i < path.Count; i++)
+        
+        var path = new Polygon();
+        var circleOffset = Vector2.right*circleRadius*2.5f;
+        for (int i = 0; i < circleCount; i++)
         {
-            var position = new Vector3(path[i].x, 0, path[i].y);
-            waypoints.Add(position);
-            var checkPoint = (CheckPoint) Instantiate(checkPointPrefab, position, Quaternion.identity);
-            checkPoints.Add(checkPoint);
-            checkPoint.transform.parent = transform;
-            checkPoint.callback = CheckPoint;
-            checkPoint.index = i;
+            var center = -circleOffset*i;
+            var secondPath = Polygon.Circle(circleRadius, 30) + center;
+            if (i % 2 == 1)
+            {
+                secondPath.Reverse();
+            }
+            path.InsertRange(path.Count / 2, secondPath);
+            GenerateCircle(center, circleRadius);
         }
-        checkPoints[0].Disable();
-        circuit.waypoints = waypoints.ToArray();
-        circuit.Initialize();
+
+        for (int i = 0; i < circleCount; i++)
+        {
+            GenerateCheckPoints(path);
+        }
+
 
         // Cars
         startPosition = new Vector3(circleRadius, 0, 0);
@@ -100,9 +99,46 @@ public class Mastermind : MonoBehaviour
         trafficLights = (TrafficLights) Instantiate(trafficLightsPrefab, trafficLightsPosition, Quaternion.identity);
     }
 
+    private void GenerateCircle(Vector3 center, float radius)
+    {
+        // Pillars
+        var innerPillars = Polygon.Circle(radius - 10, 30) + center;
+        foreach (var pillar in innerPillars)
+        {
+            var clone = (Transform) Instantiate(pillarPrefab, new Vector3(pillar.x, 0, pillar.y), Quaternion.identity);
+            clone.parent = obstacles.transform;
+        }
+    }
+
+    private void GenerateCheckPoints(Polygon path)
+    {
+        var waypoints = new List<Vector3>();
+        for (int i = 0; i < path.Count; i++)
+        {
+            var position = new Vector3(path[i].x, 0, path[i].y);
+            waypoints.Add(position);
+            var checkPoint = (CheckPoint) Instantiate(checkPointPrefab, position, Quaternion.identity);
+            checkPoints.Add(checkPoint);
+            checkPoint.transform.parent = transform;
+            checkPoint.callback = CheckPoint;
+            checkPoint.index = i;
+            if (i > 0)
+            {
+                if (Random.value < rampChance)
+                {
+                    var clone = (Transform)Instantiate(ramps.Random(), position, Quaternion.LookRotation(position - waypoints[i - 1]));
+                    clone.parent = transform;
+                }
+            }
+        }
+        checkPoints[0].Disable();
+        circuit.waypoints = waypoints.ToArray();
+        circuit.Initialize();
+    }
+
     private void StartCountdown()
     {
-        trafficLights.StartCountdown(10, () => Debug.Log("Byr!"), () =>
+        trafficLights.StartCountdown(5, () => Debug.Log("Byr!"), () =>
         {
             Debug.Log("Start!");
             ActivateCars();

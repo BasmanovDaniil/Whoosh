@@ -1419,7 +1419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db865986f75ee44eba89ace4646af65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waitTime: 3
+  waitTime: .5
   velocityThreshold: 1
 --- !u!114 &11400012
 MonoBehaviour:
@@ -1462,7 +1462,7 @@ MonoBehaviour:
   maxSpeedSteerResponse: .5
   maxSpeed: 60
   maxTorque: 35
-  minTorque: 10
+  minTorque: 35
   brakePower: 40
   adjustCentreOfMass: .25
   advanced:
