@@ -3,9 +3,21 @@ using UnityEngine;
 
 public class TrafficLights : MonoBehaviour
 {
-    public void StartCountdown(Action onFinished)
+    public void StartCountdown(int count, Action onStep, Action onFinished)
     {
-        Pulse(() => Pulse(() => Pulse(onFinished)));
+        Pulse(() =>
+        {
+            count--;
+            if (count > 0)
+            {
+                onStep();
+                StartCountdown(count, onStep, onFinished);
+            }
+            else
+            {
+                onFinished();
+            }
+        });
     }
 
     private void Pulse(Action onFinished)

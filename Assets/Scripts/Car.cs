@@ -6,6 +6,12 @@ public class Car : MonoBehaviour
     public Renderer[] renderers;
 
     private bool attach = false;
+    private CarController carController;
+
+    public void Initialize()
+    {
+        carController = GetComponent<CarController>();
+    }
 
     public void SetColors(Color mainColor, Color specularColor)
     {
@@ -45,11 +51,11 @@ public class Car : MonoBehaviour
 
     public void Activate()
     {
-        
+        carController.Reset();
     }
 
     public void Deactivate()
     {
-
+        carController.Immobilize();
     }
 }

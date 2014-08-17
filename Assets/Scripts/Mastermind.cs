@@ -60,6 +60,7 @@ public class Mastermind : MonoBehaviour
             var tracker = (WaypointProgressTracker) Instantiate(carPrefab, position, Quaternion.identity);
             tracker.circuit = circuit;
             var car = tracker.GetComponent<Car>();
+            car.Initialize();
             car.SetColors(RandomE.colorHSV, RandomE.colorHSV);
             car.Deactivate();
             cars.Add(car);
@@ -67,16 +68,20 @@ public class Mastermind : MonoBehaviour
 
         var characterPrefab = Resources.Load("Character");
         Instantiate(characterPrefab, cars[0].transform.position + Vector3.up*2, Quaternion.identity);
-        //cars[0].Attach();
+        cars[0].Attach();
 
         var trafficLightsPrefab = Resources.Load<TrafficLights>("TrafficLights");
-        var trafficLightsPosition = startPosition + Vector3.up*3 + Vector3.forward*2;
+        var trafficLightsPosition = startPosition + Vector3.up*5 + Vector3.forward*10;
         trafficLights = (TrafficLights) Instantiate(trafficLightsPrefab, trafficLightsPosition, Quaternion.identity);
     }
 
     private void StartCountdown()
     {
-        trafficLights.StartCountdown(() => Debug.Log("Start!"));
+        trafficLights.StartCountdown(10, () => Debug.Log("Byr!"), () =>
+        {
+            Debug.Log("Start!");
+            ActivateCars();
+        });
     }
 
     private void ActivateCars()
