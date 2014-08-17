@@ -62,8 +62,9 @@ public class WaypointProgressTracker : MonoBehaviour {
 		progressNum = 0;
 		if (progressStyle == ProgressStyle.PointToPoint)
 		{
-			target.position = circuit.Waypoints[ progressNum ].position;
-			target.rotation = circuit.Waypoints[ progressNum ].rotation;
+			target.position = circuit.waypoints[ progressNum ];
+            //target.rotation = circuit.waypoints[progressNum].rotation;
+            target.rotation = Quaternion.identity;
 		}
 	}
 	
@@ -97,12 +98,12 @@ public class WaypointProgressTracker : MonoBehaviour {
 			Vector3 targetDelta = target.position-transform.position;
 			if (targetDelta.magnitude < pointToPointThreshold)
 			{
-				progressNum = (progressNum+1) % circuit.Waypoints.Length;
+				progressNum = (progressNum+1) % circuit.waypoints.Length;
 			}
 
 			
-			target.position = circuit.Waypoints[ progressNum ].position;
-			target.rotation = circuit.Waypoints[ progressNum ].rotation;
+			target.position = circuit.waypoints[ progressNum ];
+			//target.rotation = circuit.waypoints[ progressNum ].rotation;
 
 			// get our current progress along the route
 			progressPoint = circuit.GetRoutePoint( progressDistance );

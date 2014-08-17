@@ -22,18 +22,15 @@ public class Mastermind : MonoBehaviour
             }
         }
 
-        circuit = new GameObject("Waypoints").AddComponent<WaypointCircuit>();
+        circuit = GetComponent<WaypointCircuit>();
         var polygon = Polygon.Circle(100, 30);
-        var waypoints = new List<Transform>();
+        var waypoints = new List<Vector3>();
         foreach (var vertex in polygon)
         {
-            var waypoint = new GameObject("Waypoint " + vertex.x + " " + vertex.y);
-            waypoint.transform.position = new Vector3(vertex.x, 0, vertex.y);
-            waypoint.transform.parent = circuit.transform;
-            waypoints.Add(waypoint.transform);
+            waypoints.Add(new Vector3(vertex.x, 0, vertex.y));
         }
 
-        circuit.Waypoints = waypoints.ToArray();
+        circuit.waypoints = waypoints.ToArray();
         circuit.Initialize();
 
         var carPrefab = Resources.Load<WaypointProgressTracker>("Car");
