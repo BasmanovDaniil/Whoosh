@@ -11,6 +11,7 @@ public class Mastermind : MonoBehaviour
     private Vector3 startPosition;
     private float carOffset = 7;
     private TrafficLights trafficLights;
+    private List<CheckPoint> checkPoints = new List<CheckPoint>();
 
     private void Awake()
     {
@@ -26,14 +27,17 @@ public class Mastermind : MonoBehaviour
     {
         var obstacles = new GameObject("Obstacles");
         var pillarPrefab = Resources.Load<Transform>("Pillar");
+        var checkPointPrefab = Resources.Load<CheckPoint>("CheckPoint");
+        var carPrefab = Resources.Load<WaypointProgressTracker>("Car");
+        var characterPrefab = Resources.Load("Character");
 
+        // Pillars
         var outerPillars = Polygon.Circle(circleRadius + carOffset*carCount + 10, 30);
         foreach (var pillar in outerPillars)
         {
             var clone = (Transform) Instantiate(pillarPrefab, new Vector3(pillar.x, 0, pillar.y), Quaternion.identity);
             clone.parent = obstacles.transform;
         }
-
         var innerPillars = Polygon.Circle(circleRadius - 10, 30);
         foreach (var pillar in innerPillars)
         {
@@ -41,18 +45,23 @@ public class Mastermind : MonoBehaviour
             clone.parent = obstacles.transform;
         }
 
+        // Circuit
         circuit = GetComponent<WaypointCircuit>();
         var path = Polygon.Circle(circleRadius, 30);
         var waypoints = new List<Vector3>();
         foreach (var vertex in path)
         {
-            waypoints.Add(new Vector3(vertex.x, 0, vertex.y));
+            var position = new Vector3(vertex.x, 0, vertex.y);
+            waypoints.Add(position);
+            var checkPoint = (CheckPoint)Instantiate(checkPointPrefab, position, Quaternion.identity);
+            checkPoints.Add(checkPoint);
+            checkPoint.transform.parent = transform;
         }
 
         circuit.waypoints = waypoints.ToArray();
         circuit.Initialize();
 
-        var carPrefab = Resources.Load<WaypointProgressTracker>("Car");
+        // Cars
         startPosition = new Vector3(circleRadius, 0, 0);
         for (int i = 0; i < carCount; i++)
         {
@@ -66,10 +75,11 @@ public class Mastermind : MonoBehaviour
             cars.Add(car);
         }
 
-        var characterPrefab = Resources.Load("Character");
+        // Character
         Instantiate(characterPrefab, cars[0].transform.position + Vector3.up*2, Quaternion.identity);
         cars[0].Attach();
 
+        // Traffic lights
         var trafficLightsPrefab = Resources.Load<TrafficLights>("TrafficLights");
         var trafficLightsPosition = startPosition + Vector3.up*5 + Vector3.forward*10;
         trafficLights = (TrafficLights) Instantiate(trafficLightsPrefab, trafficLightsPosition, Quaternion.identity);
