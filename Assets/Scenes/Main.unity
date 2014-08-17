@@ -144,7 +144,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11400000, guid: 39bad9409a26955448ed6b7943f53c9a, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 39bad9409a26955448ed6b7943f53c9a, type: 2}
   m_RootGameObject: {fileID: 277018764}
   m_IsPrefabParent: 0
@@ -272,7 +273,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 277018766}
-  - 114: {fileID: 277018765}
   m_Layer: 0
   m_Name: Lights
   m_TagString: Untagged
@@ -280,22 +280,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &277018765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 39bad9409a26955448ed6b7943f53c9a,
-    type: 2}
-  m_PrefabInternal: {fileID: 24763827}
-  m_GameObject: {fileID: 277018764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b27507c5d0efbbd47ac8c1de9a1a0a35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showOnlyOn: 0
-  content:
-  - {fileID: 1286881251}
-  childrenOfThisObject: 0
 --- !u!4 &277018766
 Transform:
   m_ObjectHideFlags: 0
