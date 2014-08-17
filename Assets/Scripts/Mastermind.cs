@@ -8,6 +8,18 @@ public class Mastermind : MonoBehaviour
 
     private void Awake()
     {
+        var obstacles = new GameObject("Obstacles");
+        var pillarPrefab = Resources.Load<Transform>("Pillar");
+
+        for (int x = -5; x < 5; x++)
+        {
+            for (int z = -5; z < 5; z++)
+            {
+                var clone = (Transform)Instantiate(pillarPrefab, new Vector3(x*30, 0, z*50), Quaternion.identity);
+                clone.parent = obstacles.transform;
+            }
+        }
+
         var carPrefab = Resources.Load<WaypointProgressTracker>("Car");
         foreach (var spawnPosition in spawnPositions)
         {
