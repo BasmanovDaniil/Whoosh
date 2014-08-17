@@ -28,7 +28,7 @@ public class FirstPersonHeadBob : MonoBehaviour {
 	[SerializeField] AudioClip landSound;				// the sound played when character touches back on ground.
 
 	// private vars:
-	FirstPersonCharacter character;						// a reference to the First Person Character component (on the parent gameobject)
+    Character character;						// a reference to the First Person Character component (on the parent gameobject)
 	Vector3 originalLocalPos;							// the original local position of this gameobject at Start
 
 	float nextStepTime = 0.5f;									// the time at which the next footstep sound is due to occur
@@ -54,7 +54,7 @@ public class FirstPersonHeadBob : MonoBehaviour {
 	void Start () {
 
 		originalLocalPos = head.localPosition;
-		character = GetComponent<FirstPersonCharacter>();
+        character = GetComponent<Character>();
 		if (audio == null)
 		{
 			// we automatically add an audiosource, if one has not been manually added.

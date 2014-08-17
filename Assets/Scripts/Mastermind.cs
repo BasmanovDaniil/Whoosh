@@ -7,6 +7,7 @@ public class Mastermind : MonoBehaviour
     public Vector3[] spawnPositions;
 
     private WaypointCircuit circuit;
+    private List<Car> cars = new List<Car>();
 
     private void Awake()
     {
@@ -40,9 +41,11 @@ public class Mastermind : MonoBehaviour
             tracker.circuit = circuit;
             var car = tracker.GetComponent<Car>();
             car.SetColors(RandomE.colorHSV, RandomE.colorHSV);
+            cars.Add(car);
         }
 
         var characterPrefab = Resources.Load("Character");
         Instantiate(characterPrefab, spawnPositions[0] + Vector3.up*2, Quaternion.identity);
+        cars[0].Attach();
     }
 }
