@@ -1,15 +1,17 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
+using UnityEngine;
 
-public class CheckPoint : MonoBehaviour {
+public class CheckPoint : MonoBehaviour
+{
+    public Action<Car> callback;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Vehicles"))
+        {
+            var car = other.GetComponentInParent<Car>();
+            callback(car);
+            collider.enabled = false;
+        }
+    }
 }

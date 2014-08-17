@@ -53,9 +53,10 @@ public class Mastermind : MonoBehaviour
         {
             var position = new Vector3(vertex.x, 0, vertex.y);
             waypoints.Add(position);
-            var checkPoint = (CheckPoint)Instantiate(checkPointPrefab, position, Quaternion.identity);
+            var checkPoint = (CheckPoint) Instantiate(checkPointPrefab, position, Quaternion.identity);
             checkPoints.Add(checkPoint);
             checkPoint.transform.parent = transform;
+            checkPoint.callback = CheckPoint;
         }
 
         circuit.waypoints = waypoints.ToArray();
@@ -107,6 +108,18 @@ public class Mastermind : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return))
         {
             Application.LoadLevel(0);
+        }
+    }
+
+    private void CheckPoint(Car firstCar)
+    {
+        if (firstCar == Character.instance.car)
+        {
+            Debug.Log("Character");
+        }
+        else
+        {
+            Debug.Log("AI " + firstCar.name);
         }
     }
 }
