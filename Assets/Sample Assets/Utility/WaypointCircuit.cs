@@ -15,7 +15,12 @@ public class WaypointCircuit : MonoBehaviour {
 
 	public float editorVisualisationSubsteps = 100;
 	public float Length { get; private set; }
-	public Transform[] Waypoints { get { return waypointList.items; } }
+
+    public Transform[] Waypoints
+    {
+        get { return waypointList.items; }
+        set { waypointList.items = value; }
+    }
 	
     //this being here will save GC allocs
     int p0n;
@@ -29,14 +34,14 @@ public class WaypointCircuit : MonoBehaviour {
     Vector3 P2;
     Vector3 P3;
 
-	// Use this for initialization
-	void Awake () {
-		if (Waypoints.Length > 1)
-		{
-			CachePositionsAndDistances();
-		}
-		numPoints = Waypoints.Length;
-	}
+    public void Initialize()
+    {
+        if (Waypoints.Length > 1)
+        {
+            CachePositionsAndDistances();
+        }
+        numPoints = Waypoints.Length;
+    }
 
 	public RoutePoint GetRoutePoint(float dist)
 	{

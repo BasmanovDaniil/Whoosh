@@ -1,10 +1,12 @@
-﻿using ProceduralToolkit;
+﻿using System.Collections.Generic;
+using ProceduralToolkit;
 using UnityEngine;
 
 public class Mastermind : MonoBehaviour
 {
-    public WaypointCircuit circuit;
     public Vector3[] spawnPositions;
+
+    private WaypointCircuit circuit;
 
     private void Awake()
     {
@@ -19,6 +21,22 @@ public class Mastermind : MonoBehaviour
                 clone.parent = obstacles.transform;
             }
         }
+
+        circuit = new GameObject("Waypoints").AddComponent<WaypointCircuit>();
+
+        var waypoints = new List<Transform>();
+        for (int x = -3; x < 3; x++)
+        {
+            for (int z = -5; z < 5; z++)
+            {
+                var waypoint = new GameObject("Waypoint " + x + " " + z);
+                waypoint.transform.position = new Vector3(x*30, 0, z*50 + 25);
+                waypoint.transform.parent = circuit.transform;
+                waypoints.Add(waypoint.transform);
+            }
+        }
+        circuit.Waypoints = waypoints.ToArray();
+        circuit.Initialize();
 
         var carPrefab = Resources.Load<WaypointProgressTracker>("Car");
         foreach (var spawnPosition in spawnPositions)
