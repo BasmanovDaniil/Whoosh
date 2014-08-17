@@ -7,10 +7,12 @@ public class Car : MonoBehaviour
 
     private bool attach = false;
     private CarController carController;
+    private float defaultMaxSpeed;
 
     public void Initialize()
     {
         carController = GetComponent<CarController>();
+        defaultMaxSpeed = carController.MaxSpeed;
     }
 
     public void SetColors(Color mainColor, Color specularColor)
@@ -29,6 +31,7 @@ public class Car : MonoBehaviour
         //Character.instance.transform.parent = roof;
         attach = true;
         Character.instance.car = this;
+        carController.MaxSpeed -= carController.MaxSpeed/3;
     }
 
     public void Detach()
@@ -37,6 +40,7 @@ public class Car : MonoBehaviour
         Character.instance.rigidbody.AddForce(rigidbody.velocity + Vector3.up*700);
         attach = false;
         Character.instance.car = null;
+        carController.MaxSpeed = defaultMaxSpeed;
     }
 
     private void FixedUpdate()

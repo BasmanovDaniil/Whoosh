@@ -79,6 +79,7 @@ public class CarController : MonoBehaviour
     public float MaxSpeed
     {
         get { return maxSpeed; }
+        set { maxSpeed = value; }
     }
 
 
