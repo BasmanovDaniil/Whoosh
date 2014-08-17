@@ -17,24 +17,22 @@ public class Mastermind : MonoBehaviour
         {
             for (int z = -5; z < 5; z++)
             {
-                var clone = (Transform)Instantiate(pillarPrefab, new Vector3(x*30, 0, z*50), Quaternion.identity);
+                var clone = (Transform) Instantiate(pillarPrefab, new Vector3(x*30, 0, z*50), Quaternion.identity);
                 clone.parent = obstacles.transform;
             }
         }
 
         circuit = new GameObject("Waypoints").AddComponent<WaypointCircuit>();
-
+        var polygon = Polygon.Circle(100, 30);
         var waypoints = new List<Transform>();
-        for (int x = -3; x < 3; x++)
+        foreach (var vertex in polygon)
         {
-            for (int z = -5; z < 5; z++)
-            {
-                var waypoint = new GameObject("Waypoint " + x + " " + z);
-                waypoint.transform.position = new Vector3(x*30, 0, z*50 + 25);
-                waypoint.transform.parent = circuit.transform;
-                waypoints.Add(waypoint.transform);
-            }
+            var waypoint = new GameObject("Waypoint " + vertex.x + " " + vertex.y);
+            waypoint.transform.position = new Vector3(vertex.x, 0, vertex.y);
+            waypoint.transform.parent = circuit.transform;
+            waypoints.Add(waypoint.transform);
         }
+
         circuit.Waypoints = waypoints.ToArray();
         circuit.Initialize();
 
