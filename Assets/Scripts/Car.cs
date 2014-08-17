@@ -42,4 +42,14 @@ public class Car : MonoBehaviour
             Character.instance.rigidbody.MovePosition(position);
         }
     }
+
+    public void Activate()
+    {
+        
+    }
+
+    public void Deactivate()
+    {
+
+    }
 }
