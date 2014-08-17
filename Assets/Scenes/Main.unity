@@ -300,12 +300,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b951de35b99b80f469534621723ea870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPositions:
-  - {x: -15, y: 0, z: -33}
-  - {x: -7, y: 0, z: -33}
-  - {x: 0, y: 0, z: -33}
-  - {x: 7, y: 0, z: -33}
-  - {x: 15, y: 0, z: -33}
 --- !u!4 &663381886
 Transform:
   m_ObjectHideFlags: 0
@@ -434,7 +428,7 @@ MeshFilter:
 --- !u!1 &1178551086
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100006, guid: bf32af5cc79316b47b51d9fe2e47ef64, type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 4
   m_Component:
@@ -450,8 +444,7 @@ GameObject:
 --- !u!132 &1178551087
 GUIText:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 13200000, guid: bf32af5cc79316b47b51d9fe2e47ef64,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1178551086}
   m_Enabled: 1
@@ -474,7 +467,7 @@ GUIText:
 --- !u!4 &1178551088
 Transform:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400006, guid: bf32af5cc79316b47b51d9fe2e47ef64, type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1178551086}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
