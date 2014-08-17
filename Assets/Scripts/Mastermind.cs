@@ -4,29 +4,39 @@ using UnityEngine;
 
 public class Mastermind : MonoBehaviour
 {
-    public Vector3[] spawnPositions;
-
+    private int carCount = 5;
     private WaypointCircuit circuit;
     private List<Car> cars = new List<Car>();
+    private float circleRadius = 100;
 
     private void Awake()
+    {
+        GenerateWorld();
+    }
+
+    private void GenerateWorld()
     {
         var obstacles = new GameObject("Obstacles");
         var pillarPrefab = Resources.Load<Transform>("Pillar");
 
-        for (int x = -5; x < 5; x++)
+        var outerPillars = Polygon.Circle(circleRadius + 10, 30);
+        foreach (var pillar in outerPillars)
         {
-            for (int z = -5; z < 5; z++)
-            {
-                var clone = (Transform) Instantiate(pillarPrefab, new Vector3(x*30, 0, z*50), Quaternion.identity);
-                clone.parent = obstacles.transform;
-            }
+            var clone = (Transform)Instantiate(pillarPrefab, new Vector3(pillar.x, 0, pillar.y), Quaternion.identity);
+            clone.parent = obstacles.transform;
+        }
+
+        var innerPillars = Polygon.Circle(circleRadius - 10, 30);
+        foreach (var pillar in innerPillars)
+        {
+            var clone = (Transform)Instantiate(pillarPrefab, new Vector3(pillar.x, 0, pillar.y), Quaternion.identity);
+            clone.parent = obstacles.transform;
         }
 
         circuit = GetComponent<WaypointCircuit>();
-        var polygon = Polygon.Circle(100, 30);
+        var path = Polygon.Circle(circleRadius, 30);
         var waypoints = new List<Vector3>();
-        foreach (var vertex in polygon)
+        foreach (var vertex in path)
         {
             waypoints.Add(new Vector3(vertex.x, 0, vertex.y));
         }
@@ -35,9 +45,11 @@ public class Mastermind : MonoBehaviour
         circuit.Initialize();
 
         var carPrefab = Resources.Load<WaypointProgressTracker>("Car");
-        foreach (var spawnPosition in spawnPositions)
+
+        for (int i = 0; i < carCount; i++)
         {
-            var tracker = (WaypointProgressTracker) Instantiate(carPrefab, spawnPosition, Quaternion.identity);
+            var position = new Vector3(circleRadius + i*7, 0, 5);
+            var tracker = (WaypointProgressTracker) Instantiate(carPrefab, position, Quaternion.identity);
             tracker.circuit = circuit;
             var car = tracker.GetComponent<Car>();
             car.SetColors(RandomE.colorHSV, RandomE.colorHSV);
@@ -45,7 +57,7 @@ public class Mastermind : MonoBehaviour
         }
 
         var characterPrefab = Resources.Load("Character");
-        Instantiate(characterPrefab, spawnPositions[0] + Vector3.up*2, Quaternion.identity);
+        Instantiate(characterPrefab, cars[0].transform.position + Vector3.up*2, Quaternion.identity);
         cars[0].Attach();
     }
 }
