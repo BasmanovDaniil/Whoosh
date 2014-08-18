@@ -50,25 +50,41 @@ public class Character : MonoBehaviour
             Screen.lockCursor = lockCursor;
 
             Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2f, Screen.height/2f, 0));
-            var hits = Physics.SphereCastAll(ray, 3, 1000, 1 << LayerMask.NameToLayer("Vehicles"));
+            var hits = Physics.SphereCastAll(ray, 2, 1000, 1 << LayerMask.NameToLayer("Vehicles"));
             System.Array.Sort(hits, rayHitComparer);
 
             if (hits.Length > 0)
             {
-                foreach (var hit in hits)
+                if (hits.Length == 1)
                 {
-                    var firstCar = hit.transform.GetComponentInParent<Car>();
+                    var firstCar = hits[0].transform.GetComponentInParent<Car>();
                     if (car == null)
                     {
                         firstCar.Attach();
-                        break;
                     }
                     if (car != firstCar)
                     {
                         Detach();
-                        break;
                     }
                 }
+                else
+                {
+                    foreach (var hit in hits)
+                    {
+                        var firstCar = hit.transform.GetComponentInParent<Car>();
+                        if (car == null)
+                        {
+                            firstCar.Attach();
+                            break;
+                        }
+                        if (car != firstCar)
+                        {
+                            Detach();
+                            break;
+                        }
+                    }
+                }
+                
             }
             else
             {

@@ -36,7 +36,7 @@ public class Car : MonoBehaviour
 
     public void Detach()
     {
-        Character.instance.rigidbody.AddExplosionForce(20000, rigidbody.position, 5);
+        Character.instance.rigidbody.AddExplosionForce(20000, rigidbody.position, 10);
         attach = false;
         Character.instance.car = null;
         carController.MaxSpeed = defaultMaxSpeed;
