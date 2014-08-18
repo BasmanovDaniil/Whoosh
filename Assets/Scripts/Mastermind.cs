@@ -14,7 +14,7 @@ public class Mastermind : MonoBehaviour
     private float circleCount = 3;
     private Vector3 startPosition;
     private float carOffset = 5;
-    private TrafficLights trafficLights;
+    private List<TrafficLights> trafficLights = new List<TrafficLights>();
     private List<CheckPoint> checkPoints = new List<CheckPoint>();
     private GUIText counterText;
     private GUIText crosshairText;
@@ -36,15 +36,15 @@ public class Mastermind : MonoBehaviour
         yield return null;
         GenerateTrack();
         yield return null;
-        GenerateTrafficLights();
-        yield return null;
         GenerateCars();
+        yield return null;
+        GenerateTrafficLights();
         GenerateCharacter();
         yield return null;
         StartCountdown();
         audio.Play();
     }
-    
+
     private void LoadPrefabs()
     {
         obstacles = new GameObject("Obstacles");
@@ -69,20 +69,20 @@ public class Mastermind : MonoBehaviour
         // Circuit
         circuit = GetComponent<WaypointCircuit>();
         var path = new Polygon();
-        var circleOffset = Vector2.right * circleRadius * 2.5f;
+        var circleOffset = Vector2.right*circleRadius*2.5f;
         for (int i = 0; i < circleCount; i++)
         {
-            var center = -circleOffset * i;
+            var center = -circleOffset*i;
             var secondPath = Polygon.Circle(circleRadius, 30) + center;
-            if (i % 2 == 1)
+            if (i%2 == 1)
             {
                 secondPath.Reverse();
             }
-            if (i!= 0)
+            if (i != 0)
             {
-                path.Insert(path.Count / 2, center + circleOffset / 2);
+                path.Insert(path.Count/2, center + circleOffset/2);
             }
-            path.InsertRange(path.Count / 2, secondPath);
+            path.InsertRange(path.Count/2, secondPath);
             GenerateCircle(center, circleRadius);
         }
 
@@ -134,14 +134,6 @@ public class Mastermind : MonoBehaviour
         circuit.Initialize();
     }
 
-    private void GenerateTrafficLights()
-    {
-        // Traffic lights
-        var trafficLightsPrefab = Resources.Load<TrafficLights>("TrafficLights");
-        var trafficLightsPosition = startPosition + Vector3.up * 5 + Vector3.forward * 10;
-        trafficLights = (TrafficLights)Instantiate(trafficLightsPrefab, trafficLightsPosition, Quaternion.identity);
-    }
-
     private void GenerateCars()
     {
         // Cars
@@ -159,16 +151,39 @@ public class Mastermind : MonoBehaviour
         }
     }
 
+    private void GenerateTrafficLights()
+    {
+        // Traffic lights
+        var trafficLightsPrefab = Resources.Load<TrafficLights>("TrafficLights");
+
+        foreach (var car in cars)
+        {
+            var trafficLightsPosition = car.transform.position + Vector3.up*5 + Vector3.forward*10;
+            trafficLights.Add(
+                (TrafficLights) Instantiate(trafficLightsPrefab, trafficLightsPosition, Quaternion.identity));
+        }
+    }
+
     private void GenerateCharacter()
     {
         // Character
-        Instantiate(characterPrefab, cars[cars.Count - 1].transform.position + Vector3.up * 2, Quaternion.identity);
+        Instantiate(characterPrefab, cars[cars.Count - 1].transform.position + Vector3.up*2, Quaternion.identity);
         cars[cars.Count - 1].Attach();
     }
 
     private void StartCountdown()
     {
-        trafficLights.StartCountdown(5, () => { }, ActivateCars);
+        for (int i = 0; i < trafficLights.Count; i++)
+        {
+            if (i == 0)
+            {
+                trafficLights[i].StartCountdown(3, () => { }, ActivateCars);
+            }
+            else
+            {
+                trafficLights[i].StartCountdown(3, () => { }, () => { });
+            }
+        }
     }
 
     private void ActivateCars()

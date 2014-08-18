@@ -42,6 +42,6 @@ public class TrafficLights : MonoBehaviour
     private void Pulse(GameObject go, Action onFinished)
     {
         LeanTween.scale(go, Vector3.zero, 0.5f).onComplete =
-            () => { LeanTween.scale(go, Vector3.one, 0.5f).onComplete = onFinished; };
+            () => { LeanTween.scale(go, Vector3.one*2, 0.5f).onComplete = onFinished; };
     }
 }
