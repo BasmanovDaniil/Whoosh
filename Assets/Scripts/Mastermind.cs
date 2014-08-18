@@ -110,7 +110,7 @@ public class Mastermind : MonoBehaviour
         {
             var position = new Vector3(path[i].x, 0, path[i].y);
             waypoints.Add(position);
-            var checkPoint = (CheckPoint) Instantiate(checkPointPrefab, position + Vector3.up, Quaternion.identity);
+            var checkPoint = (CheckPoint) Instantiate(checkPointPrefab, position + Vector3.up*2, Quaternion.identity);
             checkPoints.Add(checkPoint);
             checkPoint.transform.parent = transform;
             checkPoint.callback = CheckPoint;
